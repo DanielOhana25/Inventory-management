@@ -1,14 +1,47 @@
-
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1 className="text-4xl font-bold text-center sm:text-left">Welcome to Inventory Management</h1>
-        <p className="text-center sm:text-left">This is a simple inventory management system built with Next.js, Tailwind CSS, and TypeScript.</p>
-        <p className="text-center sm:text-left">The authors are Daniel and Eliav.</p>
-        <a href="/products" className="btn">Get Started</a>
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="bg-gray-800 text-white py-4 px-8">
+        <h1 className="text-2xl font-bold">Inventory Management</h1>
+        <nav className="mt-2">
+          <ul className="flex gap-4">
+            <li>
+              <a href="/" className="hover:underline">
+                Home
+              </a>
+            </li>
+            <li>
+              <a href="/products" className="hover:underline">
+                Products
+              </a>
+            </li>
+            <li>
+              <a href="/about" className="hover:underline">
+                About
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+
+      {/* Main */}
+      <main className="flex-grow p-8">
+        <h2 className="text-4xl font-bold mb-4">Welcome to Inventory Management</h2>
+        <p className="text-lg mb-6">
+          This is a simple inventory management system built with Next.js, Tailwind CSS, and JavaScript.
+        </p>
+        <a
+          href="/products"
+          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+        >
+          Get Started
+        </a>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 py-4 px-8 text-center">
+        <p>© 2025 Inventory Management. All rights reserved.</p>
       </footer>
     </div>
   );

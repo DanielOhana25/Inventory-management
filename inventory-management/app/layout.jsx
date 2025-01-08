@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -27,3 +28,8 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
+
+// Validation des props avec PropTypes
+RootLayout.propTypes = {
+  children: PropTypes.node.isRequired, // Assure que `children` est défini et de type "React Node".
+};
