@@ -29,7 +29,7 @@ export default function Home() {
       <main className="flex-grow p-8">
         <h2 className="text-4xl font-bold mb-4">Welcome to Inventory Management</h2>
         <p className="text-lg mb-6">
-          This is a simple inventory management system built with Next.js, Tailwind CSS, and JavaScript.
+          This test is a simple inventory management system built with Next.js, Tailwind CSS, and JavaScript.
         </p>
         <a
           href="/products"
