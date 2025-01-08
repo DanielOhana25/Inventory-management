@@ -1,4 +1,15 @@
+"use client"
+
+import React, { useState } from "react";
+import SearchBar from "../components/SearchBar";
+
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+
+const handleSearch = (term) => {
+  setSearchTerm(term);
+  console.log("Recherche en cours :", term);}
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -27,16 +38,12 @@ export default function Home() {
 
       {/* Main */}
       <main className="flex-grow p-8">
-        <h2 className="text-4xl font-bold mb-4">Welcome to Inventory Management</h2>
-        <p className="text-lg mb-6">
-          This test is a simple inventory management system built with Next.js, Tailwind CSS, and JavaScript.
-        </p>
-        <a
-          href="/products"
-          className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
-        >
-          Get Started
-        </a>
+      <div className="mb-4">
+        <SearchBar
+          search={searchTerm} 
+          setSearch={handleSearch} 
+        />
+      </div>
       </main>
 
       {/* Footer */}
