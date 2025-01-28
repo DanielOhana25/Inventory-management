@@ -1,11 +1,11 @@
 "use client"
 
 import React, { useState, useEffect } from "react";
-import SearchBar from "../components/SearchBar";
+import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button"; 
 
 
-export default function Home() {
+export default function Stock() {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
