@@ -1,13 +1,13 @@
 import React from "react";
 
-export default function SearchBar({ search, setSearch }) {
+export default function SearchBar({ search, setSearch, placeholder }) {
   return (
     <div>
       <input
         type="text"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search..."
+        placeholder={placeholder}
         className="border border-customGreen rounded-full h-10 w-[26.25rem] p-2.5"
       />
     </div>
