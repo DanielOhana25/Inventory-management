@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 
 export default function Stock() {
 
-  const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
 
 useEffect(() => {
   fetchProducts()
@@ -21,6 +21,7 @@ const fetchProducts = async () => {
       throw new Error(`HTTP error! status: ${response.status}`);
     }    const data = await response.json();
     setProducts(data);
+    setFilteredProducts(data);
     
   }
   catch (error) {
@@ -49,9 +50,14 @@ const fetchProducts = async () => {
   }
 
  
-const handleSearch = (term) => {
-  setSearchTerm(term);
-  console.log("Recherche en cours :", term);}
+  const handleSearch = (term) => {
+    const lowercasedTerm = term.toLowerCase();
+    const filtered = products.filter((product) => 
+      product.name.toLowerCase().includes(lowercasedTerm) || 
+      (product.suppliers && product.suppliers.supplier_name.toLowerCase().includes(lowercasedTerm))
+    );
+    setFilteredProducts(filtered);
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -60,11 +66,7 @@ const handleSearch = (term) => {
       {/* Main */}
       <main className="flex-grow p-8">
       <div className="mb-4">
-        <SearchBar
-          search={searchTerm} 
-          setSearch={handleSearch} 
-          placeholder={"Rechercher un produit dans le stock..."}
-        />
+                  <SearchBar onSearch={handleSearch} placeholder={"Rechercher un produit dans le stock..."} />
       </div>
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
@@ -81,7 +83,7 @@ const handleSearch = (term) => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 bg-white">
-                {products.map((product) => (
+                {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-200 transition-all duration-300">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <img
