@@ -3,12 +3,22 @@
 import React, { useState, useEffect } from "react";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button"; 
-
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Stock() {
 
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
 useEffect(() => {
   fetchProducts()
@@ -29,6 +39,8 @@ const fetchProducts = async () => {
   }}
 
   const handleEditInventory = async(data) => {
+
+    if (!selectedProduct) return;
     setIsLoading(true);
     try {
       await fetch('/api/product', {
@@ -36,10 +48,14 @@ const fetchProducts = async () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({
+          id: selectedProduct.id,
+          available_quantity: selectedProduct.available_quantity,
+          quantity: selectedProduct.quantity,
+        }),
       })
       await fetchProducts();
-      setQuantityToEdit(undefined)
+      setSelectedProduct(null);
     }
     catch(error) {
       console.error("Erreur lors de la mise à jour de l'inventaire :", error);
@@ -104,13 +120,41 @@ const fetchProducts = async () => {
                       {product.quantity}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                    <Button
-                      onClick={() => alert("bonjour")}
-                      variant="default" 
-                      className="bg-customGreen"
-                    >
-                      Editer
-                    </Button>
+                    
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button
+                          onClick={() => setSelectedProduct(product)}
+                          variant="default" 
+                          className="bg-customGreen"
+                        >
+                          Editer
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Modifier les quantités</DialogTitle>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-4">
+                            <Label className="text-sm font-semibold">Quantité disponible</Label>
+                            <Input
+                              type="number"
+                              value={selectedProduct?.available_quantity || ""}
+                              onChange={(e) => setSelectedProduct({ ...selectedProduct, available_quantity: e.target.value })}
+                            />
+                            <Label className="text-sm font-semibold">Quantité générale</Label>
+                            <Input
+                              type="number"
+                              value={selectedProduct?.quantity || ""}
+                              onChange={(e) => setSelectedProduct({ ...selectedProduct, quantity: e.target.value })}
+                            />
+                            <Button onClick={handleEditInventory} disabled={isLoading} className="bg-customGreen">
+                              {isLoading ? "Mise à jour..." : "Enregistrer"}
+                            </Button>
+                          </div>
+                        </DialogContent>
+                    </Dialog>
+                    
                     </td>
                   </tr>
                 ))}

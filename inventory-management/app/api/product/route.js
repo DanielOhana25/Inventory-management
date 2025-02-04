@@ -57,10 +57,11 @@ export async function PATCH(req) {
     try {
       // Récupérer les données envoyées dans le body de la requête
       const { id, available_quantity, quantity } = await req.json();
+     console.log(id, available_quantity, quantity); 
   
-      // Vérifier si l'ID est bien fourni
-    if (!id) {
-        return new Response('ID du produit manquant', { status: 400 });
+      // Vérifier si les donnes sont bien fourni
+      if (!id || available_quantity === undefined || quantity === undefined) {
+        return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
       }
       // Mettre à jour le produit dans la base de données Supabase
       const { data, error } = await supabase
@@ -69,22 +70,17 @@ export async function PATCH(req) {
           available_quantity,
           quantity,
         })
-        .eq('id', id); 
+        .eq('product_id', id); 
   
       if (error) {
         console.error('Erreur lors de la mise à jour de l inventaire:', error);
-        return new Response('Erreur lors de la mise à jour de l inventaire', { status: 500 });
+        return NextResponse.json({ message: "Erreur interne" }, { status: 500 });
       }
   
       // Retourner le produit mis à jour avec un statut 200
-      return new Response(JSON.stringify(data), {
-        status: 200,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    } catch (error) {
+      return NextResponse.json(data, { status: 200 });
+     } catch (error) {
       console.error('Erreur interne du serveur:', error);
-      return new Response('Erreur interne du serveur', { status: 500 });
+      return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
     }
   }
