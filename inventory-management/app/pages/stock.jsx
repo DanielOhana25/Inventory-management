@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "app/hooks/use-toast";
+import {Toaster} from "@/components/ui/toaster";
 
 export default function Stock() {
 
@@ -19,6 +21,7 @@ export default function Stock() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
 useEffect(() => {
   fetchProducts()
@@ -41,6 +44,27 @@ const fetchProducts = async () => {
   const handleEditInventory = async(data) => {
 
     if (!selectedProduct) return;
+
+    // Vérification avant l'enregistrement que la qte dispo ne soit pas superieur à la qte totale
+    if (selectedProduct.quantity < selectedProduct.available_quantity) {
+      toast({
+        title: "Erreur",
+        description: "La quantité totale ne peut pas être inférieure à la quantité disponible.",
+        variant: "destructive",
+      });
+      return;  // Empêche l'exécution de la mise à jour
+    }
+
+   // Vérification que les quantités ne soient pas négatives
+    if (selectedProduct.quantity < 0 || selectedProduct.available_quantity < 0) {
+      toast({
+        title: "Erreur",
+        description: "Les quantités ne peuvent pas être négatives.",
+        variant: "destructive",
+      });
+      return; // Empêche l'exécution de la mise à jour
+    }
+
     setIsLoading(true);
     try {
       await fetch('/api/product', {
@@ -65,7 +89,6 @@ const fetchProducts = async () => {
     }
   }
 
- 
   const handleSearch = (term) => {
     const lowercasedTerm = term.toLowerCase();
     const filtered = products.filter((product) => 
@@ -77,7 +100,7 @@ const fetchProducts = async () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      
+      <Toaster />
 
       {/* Main */}
       <main className="flex-grow p-8">
@@ -140,14 +163,13 @@ const fetchProducts = async () => {
                             <Input
                               type="number"
                               value={selectedProduct?.available_quantity || ""}
-                              onChange={(e) => setSelectedProduct({ ...selectedProduct, available_quantity: e.target.value })}
+                              onChange={(e) => setSelectedProduct({ ...selectedProduct, available_quantity:  Number(e.target.value) })}
                             />
                             <Label className="text-sm font-semibold">Quantité générale</Label>
                             <Input
                               type="number"
                               value={selectedProduct?.quantity || ""}
-                              onChange={(e) => setSelectedProduct({ ...selectedProduct, quantity: e.target.value })}
-                            />
+                              onChange={(e) => {setSelectedProduct({ ...selectedProduct, quantity: Number(e.target.value) });}}                            />
                             <Button onClick={handleEditInventory} disabled={isLoading} className="bg-customGreen">
                               {isLoading ? "Mise à jour..." : "Enregistrer"}
                             </Button>
