@@ -31,8 +31,8 @@ export default function ClientOrders() {
                 <tr>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">ID</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Date de creation</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Nom & prenom</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Qte d'artcile</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Nom & Prenom</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Qte d'artciles</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Montant TTC</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Statut de paiement</th>
                   <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Statut</th>
