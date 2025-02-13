@@ -1,12 +1,12 @@
-import supabase from '../../../lib/supabaseClient';
+import supabase from '@/lib/supabaseClient';
 import { NextResponse } from 'next/server';
 
 export async function GET(req) {
   try {
-    // Récupération des données de la table `product`
+    // Récupérer les produits et l'inventaire en un seul appel en utilisant une jointure
     const { data: products, error: productError } = await supabase
       .from('product')
-      .select('*, suppliers: supplier_id (supplier_name)');
+      .select('*, suppliers: supplier_id (supplier_name), inventory_products (available_quantity, quantity)');
 
     if (productError) {
       console.error('Erreur lors de la récupération des produits :', productError);
@@ -16,37 +16,21 @@ export async function GET(req) {
       );
     }
 
-    // Récupérer les produits de linventaire depuis Supabase
-    const { data: inventory, error: inventoryError } = await supabase
-      .from('inventory_products')
-      .select('*'); // On récupère toutes les colonnes des produits
+    const combinedData = products.map((product) => {
+      const inventoryData = product.inventory_products[0] || {}; 
 
-      if (inventoryError) {
-        console.error('Erreur lors de la récupération de l inventaire:', inventoryError);
-        return NextResponse.json({ message: 'Erreur interne du serveur' }, { status: 500 });
-      }
+      return {
+        ...product,
+        available_quantity: inventoryData.available_quantity || 0, 
+        quantity: inventoryData.quantity || 0, 
+      };
+    });
 
- // Combinaison des données : join sur `id` (produit)
- const combinedData = products.map((product) => {
-  const inventoryData = inventory.find(
-    (inv) => inv.product_id === product.id
-  );
-
-  return {
-    ...product,
-    available_quantity: inventoryData?.available_quantity || 0, // Par défaut à 0 si pas d'inventaire
-    quantity: inventoryData?.quantity || 0, // Par défaut à 0 si pas d'inventaire
-  };
-});
-
-
-
-
-      return NextResponse.json(combinedData, { status: 200 });
-    }  catch (error) {
-        console.error('Erreur interne du serveur:', error);
-        return NextResponse.json({ message: 'Erreur interne du serveur' }, { status: 500 });
-      }
+    return NextResponse.json(combinedData);
+  } catch (error) {
+    console.error('Erreur dans le traitement de la récupération des produits et de l\'inventaire :', error);
+    return NextResponse.json({ message: 'Erreur interne du serveur' }, { status: 500 });
+  }
 }
 
 
