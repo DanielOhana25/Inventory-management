@@ -41,11 +41,11 @@ const handleSearch = (term) => {
 
 
   const statusLabels = {
-    0: { text: "Non traité", color: "bg-gray-100 text-gray-800" },
-    1: { text: "Prete a la livraison", color: "bg-blue-100 text-blue-800" },
-    2: { text: "Expédié", color: "bg-orange-100 text-orange-800" },
-    3: { text: "Reçu", color: "bg-green-100 text-green-800" },
-    4: { text: "Annulé", color: "bg-red-100 text-red-800" },
+    0: { text: "Non traité", color: "bg-gray-500 text-white" },
+    1: { text: "Prete a la livraison", color: "bg-blue-500 text-white" },
+    2: { text: "Expédié", color: "bg-orange-500 text-white" },
+    3: { text: "Reçu", color: "bg-customGreen text-white" },
+    4: { text: "Annulé", color: "bg-red-500 text-white" },
   };
 
   return (
@@ -84,13 +84,13 @@ const handleSearch = (term) => {
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalQuantity}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalPrice.toFixed(2)} €</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">              
-                    <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 
-                          ${clientOrder.payment_status == 0 ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>
+                    <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 
+                          ${clientOrder.payment_status == 0 ? "bg-red-500 text-white" : "bg-customGreen text-white"}`}>
                           {clientOrder.payment_status == 0 ? "À payer" : "Payée"}
                     </span>
                       </td>
                       <td className="px-6 py-4 text-center whitespace-nowrap">
-                     <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${color}`}>{text}</span>
+                     <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 ${color}`}>{text}</span>
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.confirmed_reception_date ? new Date(clientOrder.confirmed_reception_date).toLocaleDateString() : "N/A"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">

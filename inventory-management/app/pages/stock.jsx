@@ -137,7 +137,7 @@ const fetchProducts = async () => {
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                     {product.suppliers ? product.suppliers.supplier_name : 'Inconnu'}                    </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                      <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${product.available_quantity <= 5 ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>{product.available_quantity}</span>
+                      <span className={`inline-flex rounded-full p-2.5 leading-5 ${product.available_quantity <= 5 ? "bg-red-500 text-white" : "bg-customGreen text-white"}`}>{product.available_quantity}</span>
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       {product.quantity}
