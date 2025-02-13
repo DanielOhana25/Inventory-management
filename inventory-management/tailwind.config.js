@@ -12,7 +12,7 @@ module.exports = {
   			background: 'var(--background)',
   			foreground: 'var(--foreground)',
   			customGreen: '#53b2a3',
-  			customGreenSecondary: '#53B2A3'
+  			customGreenSecondary: '#C7E1DE'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

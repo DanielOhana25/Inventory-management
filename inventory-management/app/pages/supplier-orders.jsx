@@ -29,12 +29,13 @@ export default function SupplierOrders() {
           console.error("❌ Erreur lors de la récupération des commandes clients :", error);}
     };
 
-  const handleSearch = (term) => {
-    const lowercasedTerm = term.toLowerCase();
-    const filtered = supplierOrders.filter((supplierOrder) => 
-      supplierOrder.suppliers?.supplier_name?.toLowerCase().includes(lowercasedTerm));
-    setFilteredSupplierOrders(filtered);
-  };
+    const handleSearch = (term) => {
+      const lowercasedTerm = term.toLowerCase();
+      const filtered = supplierOrders.filter((supplierOrder) => 
+        supplierOrder.suppliers?.supplier_name?.toLowerCase().includes(lowercasedTerm) 
+      );
+      setFilteredSupplierOrders(filtered);
+    };
 
   const statusLabels = {
     0: { text: "Non traité", color: "bg-gray-100 text-gray-800" },

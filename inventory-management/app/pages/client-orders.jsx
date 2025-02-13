@@ -30,13 +30,15 @@ export default function ClientOrders() {
     }
 };
 
-  const handleSearch = (term) => {
-    const lowercasedTerm = term.toLowerCase();
-    const filtered = clientOrders.filter((clientOrder) => 
-      clientOrder.id.toLowerCase().includes(lowercasedTerm)
-    );
-    setFilteredClientOrders(filtered);
-  };
+const handleSearch = (term) => {
+  const lowercasedTerm = term.toLowerCase();
+  const filtered = clientOrders.filter((clientOrder) => 
+    clientOrder.client?.first_name?.toLowerCase().includes(lowercasedTerm) ||
+    clientOrder.client?.last_name?.toLowerCase().includes(lowercasedTerm)
+  );
+  setFilteredClientOrders(filtered);
+};
+
 
   const statusLabels = {
     0: { text: "Non traité", color: "bg-gray-100 text-gray-800" },

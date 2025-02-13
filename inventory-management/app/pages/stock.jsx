@@ -112,37 +112,37 @@ const fetchProducts = async () => {
             <table className="min-w-full divide-y-200">
               <thead className="bg-customGreenSecondary">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">image</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Nom</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Fourninsseur</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Quantite disponible</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Quantite</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Action</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">image</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Nom</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Fourninsseur</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantite disponible</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantite</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Action</th>
 
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-300 bg-white">
                 {filteredProducts.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-200 transition-all duration-300">
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                       <img
                         src={product.image}
                         alt={product.name}
                         className="h-10 w-10 rounded-full"
                       />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                       {product.name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                     {product.suppliers ? product.suppliers.supplier_name : 'Inconnu'}                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                       <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${product.available_quantity <= 5 ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"}`}>{product.available_quantity}</span>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                       {product.quantity}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 text-center whitespace-nowrap">
                     
                     <Dialog>
                       <DialogTrigger asChild>
