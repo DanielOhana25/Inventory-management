@@ -1,5 +1,6 @@
 "use client"; 
 
+import React, {useState} from "react";
 import "./globals.css";
 import { BrowserRouter as Router, Routes, Route, Link , useLocation } from "react-router-dom";
 import Stock from "./pages/stock";
@@ -16,13 +17,15 @@ export default function RootLayout() {
 }
 
 function AppContent() {
+
+  const [menuOpen, setMenuOpen] = useState(false); // Gère l'état du menu mobile
   const location = useLocation(); 
 
   return (
     <html lang="en">
       <body>
       {/* Header */}
-            <header className="bg-customGreen text-white py-4 px-8 flex justify-between items-center">
+            <header className="bg-customGreen text-white py-4 px-6 flex justify-between items-center">
               <div className="flex items-center gap-4">
                 <img
                   src="/images/logo.jpg"
@@ -31,30 +34,32 @@ function AppContent() {
                 />
               </div>
 
-<nav className="hidden md:flex gap-6">
-  <Link 
-    to="/" 
-    className={`p-2.5 rounded-lg ${location.pathname === "/" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
-    Stock
-  </Link>
+      {/* Menu Burger (Mobile) */}
+      <button
+            className="md:hidden text-white focus:outline-none"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
 
-  <Link 
-    to="/supplier-orders" 
-    className={`p-2.5 rounded-lg ${location.pathname === "/supplier-orders" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
-    Commandes fournisseurs
-  </Link>
-
-  <Link 
-    to="/client-orders" 
-    className={`p-2.5 rounded-lg ${location.pathname === "/client-orders" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
-    Commandes Clients
-  </Link>
-</nav>
-
+       {/* Navigation Desktop */}
+       <nav className="hidden md:flex gap-6">
+            <NavLink to="/" text="Stock" location={location} />
+            <NavLink to="/supplier-orders" text="Commandes fournisseurs" location={location} />
+            <NavLink to="/client-orders" text="Commandes Clients" location={location} />
+          </nav>
             </header>
 
+            {menuOpen && (
+          <nav className="md:hidden bg-customGreen text-white flex flex-col gap-4 p-4">
+            <NavLink to="/" text="Stock" location={location} />
+            <NavLink to="/supplier-orders" text="Commandes fournisseurs" location={location} />
+            <NavLink to="/client-orders" text="Commandes Clients" location={location} />
+          </nav>
+        )}
+
         {/* Main Content */}
-        <main className="flex-grow p-8">
+        <main className="flex-grow container mx-auto p-6">
           <Routes>
             <Route path="/" element={<Stock />} />
             <Route path="/supplier-orders" element={<SupplierOrders />} />
@@ -68,6 +73,19 @@ function AppContent() {
       </footer>
       </body>
     </html>
+  );
+}
+
+function NavLink({ to, text, location }) {
+  return (
+    <Link
+      to={to}
+      className={`p-2.5 rounded-lg ${
+        location.pathname === to ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"
+      }`}
+    >
+      {text}
+    </Link>
   );
 }
 

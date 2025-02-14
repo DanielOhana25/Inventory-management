@@ -103,13 +103,13 @@ const fetchProducts = async () => {
       <Toaster />
 
       {/* Main */}
-      <main className="flex-grow p-8">
+      <main className="flex-grow md:p-8">
       <div className="mb-4">
                   <SearchBar onSearch={handleSearch} placeholder={"Rechercher un produit dans le stock..."} />
       </div>
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y-200">
+            <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-customGreenSecondary">
                 <tr>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">image</th>

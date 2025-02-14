@@ -51,9 +51,12 @@ const handleSearch = (term) => {
   return (
     <div className="min-h-screen flex flex-col">
       <main className="flex-grow p-8">
-      <div className="flex flex-row justify-between mb-4">
-           <SearchBar onSearch={handleSearch} placeholder={"Rechercher une commande client..."} />
-           <Button className="bg-customGreen">Nouvelle commande</Button>
+      <div className="flex flex-row justify-between mb-4 items-center">
+           <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
+           <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s">
+            <span className="md:hidden">+</span>
+            <span className="hidden md:inline">Nouvelle commande</span>
+          </Button>
       </div>
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">

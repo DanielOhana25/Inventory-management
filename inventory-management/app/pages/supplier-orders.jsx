@@ -53,10 +53,12 @@ export default function SupplierOrders() {
   
     <main className="flex-grow p-8">
     
-      <div className="flex flex-row justify-between mb-4">
-       <SearchBar onSearch={handleSearch} placeholder={"Rechercher une commande fournisseur..."} />
-       <Button className = "bg-customGreen" > Nouvelle commande  </Button>
-      </div>
+      <div className="flex flex-row justify-between mb-4 itweems-center">
+       <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
+       <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s">
+            <span className="md:hidden">+</span>
+            <span className="hidden md:inline">Nouvelle commande</span>
+      </Button>      </div>
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y-200">
