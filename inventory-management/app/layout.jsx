@@ -1,19 +1,26 @@
 "use client"; 
 
 import "./globals.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link , useLocation } from "react-router-dom";
 import Stock from "./pages/stock";
 import SupplierOrders from "./pages/supplier-orders";
 import ClientOrders from "./pages/client-orders";
 
-export default function RootLayout({ children }) {
-;
+export default function RootLayout() {  
+
+  return (
+    <Router> 
+      <AppContent /> 
+    </Router>
+  );
+}
+
+function AppContent() {
+  const location = useLocation(); 
 
   return (
     <html lang="en">
       <body>
-      <Router>
       {/* Header */}
             <header className="bg-customGreen text-white py-4 px-8 flex justify-between items-center">
               <div className="flex items-center gap-4">
@@ -23,11 +30,27 @@ export default function RootLayout({ children }) {
                   className="h-10 w-auto"
                 />
               </div>
-              <nav className="hidden md:flex gap-6">
-              <Link to="/" className="hover:underline">Stock</Link>
-              <Link to="/supplier-orders" className="hover:underline">Commandes fournisseurs</Link>
-              <Link to="/client-orders" className="hover:underline">Commandes Clients</Link>
-              </nav>
+
+<nav className="hidden md:flex gap-6">
+  <Link 
+    to="/" 
+    className={`p-2.5 rounded-lg ${location.pathname === "/" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
+    Stock
+  </Link>
+
+  <Link 
+    to="/supplier-orders" 
+    className={`p-2.5 rounded-lg ${location.pathname === "/supplier-orders" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
+    Commandes fournisseurs
+  </Link>
+
+  <Link 
+    to="/client-orders" 
+    className={`p-2.5 rounded-lg ${location.pathname === "/client-orders" ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"}`}>
+    Commandes Clients
+  </Link>
+</nav>
+
             </header>
 
         {/* Main Content */}
@@ -43,7 +66,6 @@ export default function RootLayout({ children }) {
       <footer className="bg-customGreen text-gray-300 py-4 px-8 text-center">
         <p>© 2025 Inventory Management. All rights reserved.</p>
       </footer>
-      </Router>
       </body>
     </html>
   );
