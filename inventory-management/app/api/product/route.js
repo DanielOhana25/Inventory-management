@@ -33,10 +33,6 @@ export async function GET(req) {
   }
 }
 
-
-
-
-
 export async function PATCH(req) {
     try {
       // Récupérer les données envoyées dans le body de la requête

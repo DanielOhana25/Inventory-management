@@ -3,13 +3,25 @@
 import React, {useState, useEffect} from "react";
 import SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useToast } from "app/hooks/use-toast";
+import {Toaster} from "@/components/ui/toaster";
 
 export default function ClientOrders() {
 
   const [clientOrders, setClientOrders] = useState([]);
   const [filteredClientOrders, setFilteredClientOrders] = useState([]);
   
-
+  //Toast
+  const { toast } = useToast();
+  
   useEffect(() => {
     fetchClientOrders()
   }, [])
@@ -21,7 +33,6 @@ export default function ClientOrders() {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
       const data = await response.json();
       setClientOrders(data);
       setFilteredClientOrders(data);
@@ -29,6 +40,33 @@ export default function ClientOrders() {
       console.error("❌ Erreur lors de la récupération des commandes clients :", error);
     }
 };
+
+const handlePaymentStatusChange = async(clientOrderID, status, newStatus) => {
+  console.log("hello");
+  try {
+    await fetch('/api/client-orders', {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: clientOrderID,
+        status: status,
+        payment_status: parseInt(newStatus),
+      }),
+    });
+    toast({
+      title: "Succès",
+      description: "Statut de paiement mis à jour avec succès.",
+      variant: "success",
+    });
+    
+    fetchClientOrders(); // Rafraîchir les données après mise à jour
+  }
+  catch(error) {
+    console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
+  }
+}
 
 const handleSearch = (term) => {
   const lowercasedTerm = term.toLowerCase();
@@ -50,6 +88,8 @@ const handleSearch = (term) => {
 
   return (
     <div className="min-h-screen flex flex-col">
+
+      <Toaster />
       <main className="flex-grow p-8">
       <div className="flex flex-row justify-between mb-4 items-center">
            <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
@@ -86,11 +126,22 @@ const handleSearch = (term) => {
                     <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.client?.last_name} {clientOrder.client?.first_name}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalQuantity}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalPrice.toFixed(2)} €</td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">              
-                    <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 
-                          ${clientOrder.payment_status == 0 ? "bg-red-500 text-white" : "bg-customGreen text-white"}`}>
-                          {clientOrder.payment_status == 0 ? "À payer" : "Payée"}
-                    </span>
+                    <td className="px-6 py-4 text-center whitespace-nowrap">  
+                    <Select
+                      value={clientOrder.payment_status.toString()}
+                      onValueChange={(value) => handlePaymentStatusChange(clientOrder.id, clientOrder.status, value)}
+                    >
+                      <SelectTrigger className={`px-3 py-2 rounded-md text-white ${clientOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
+                        <SelectValue>{clientOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="0">À payer</SelectItem>
+                        <SelectItem value="1">Payée</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+
                       </td>
                       <td className="px-6 py-4 text-center whitespace-nowrap">
                      <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 ${color}`}>{text}</span>

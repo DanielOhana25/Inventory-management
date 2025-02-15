@@ -26,8 +26,9 @@ export async function GET(req) {
 export async function PATCH(req) {
     try {
       const { id, status, payment_status } = await req.json();
+      console.log(id, status, payment_status);
   
-      if (!id || !status || !payment_status) {
+      if (!id || status === undefined || payment_status === undefined) {
         return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
       }
   
