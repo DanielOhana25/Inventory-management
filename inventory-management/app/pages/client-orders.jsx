@@ -41,7 +41,7 @@ export default function ClientOrders() {
     }
 };
 
-const handlePaymentStatusChange = async(clientOrderID, status, newStatus) => {
+const handleStatusChange = async(clientOrderID, status, newStatus) => {
   console.log("hello");
   try {
     await fetch('/api/client-orders', {
@@ -57,7 +57,7 @@ const handlePaymentStatusChange = async(clientOrderID, status, newStatus) => {
     });
     toast({
       title: "Succès",
-      description: "Statut de paiement mis à jour avec succès.",
+      description: "Statut de paiement mis à jour avec succès",
       variant: "success",
     });
     
@@ -65,6 +65,11 @@ const handlePaymentStatusChange = async(clientOrderID, status, newStatus) => {
   }
   catch(error) {
     console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
+    toast({
+      title: "Erreur",
+      description: "Erreur lors de la mise à jour du statut de paiement.",
+      variant: "destructive",
+    });
   }
 }
 
@@ -129,7 +134,7 @@ const handleSearch = (term) => {
                     <td className="px-6 py-4 text-center whitespace-nowrap">  
                     <Select
                       value={clientOrder.payment_status.toString()}
-                      onValueChange={(value) => handlePaymentStatusChange(clientOrder.id, clientOrder.status, value)}
+                      onValueChange={(value) => handleStatusChange(clientOrder.id, clientOrder.status, value)}
                     >
                       <SelectTrigger className={`px-3 py-2 rounded-md text-white ${clientOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
                         <SelectValue>{clientOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
@@ -144,7 +149,24 @@ const handleSearch = (term) => {
 
                       </td>
                       <td className="px-6 py-4 text-center whitespace-nowrap">
-                     <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 ${color}`}>{text}</span>
+
+                      <Select
+                      value={clientOrder.status.toString()}
+                      onValueChange={(value) => handleStatusChange(clientOrder.id, value, clientOrder.payment_status)}
+                    >
+                      <SelectTrigger className={`px-3 py-2 rounded-md text-white ${color}`}>
+                        <SelectValue>{text}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="0">Non traité</SelectItem>
+                        <SelectItem value="1">Prêt à la livraison</SelectItem>
+                        <SelectItem value="2">Expédié</SelectItem>
+                        <SelectItem value="3">Reçu</SelectItem>
+                        <SelectItem value="4">Annulé</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.confirmed_reception_date ? new Date(clientOrder.confirmed_reception_date).toLocaleDateString() : "N/A"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">

@@ -3,11 +3,22 @@
 import React, {useState, useEffect} from "react";
 import  SearchBar from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";  
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useToast } from "app/hooks/use-toast";
+import {Toaster} from "@/components/ui/toaster";
 
 export default function SupplierOrders() {
 
     const [supplierOrders, setSupplierOrders] = useState([]);
     const [filteredSupplierOrders, setFilteredSupplierOrders] = useState([]);
+    const { toast } = useToast();
 
     useEffect(() => {
         fetchSupplierOrders()
@@ -29,6 +40,37 @@ export default function SupplierOrders() {
           console.error("❌ Erreur lors de la récupération des commandes clients :", error);}
     };
 
+    const handleStatusChange = async(supplierOrderID, status, newStatus) => {
+      console.log("hello");
+      try {
+        await fetch('/api/supplier-orders', {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            id: supplierOrderID,
+            status: status,
+            payment_status: parseInt(newStatus),
+          }),
+        });
+        toast({
+          title: "Succès",
+          description: "Statut de paiement mis à jour avec succès",
+          variant: "success",
+        });
+        fetchSupplierOrders(); // Rafraîchir les données après mise à jour
+      } catch (error) {
+        console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
+        toast({
+          title: "Erreur",
+          description: "Erreur lors de la mise à jour du statut de paiement.",
+          variant: "destructive",
+        });
+      }
+    };
+
+
     const handleSearch = (term) => {
       const lowercasedTerm = term.toLowerCase();
       const filtered = supplierOrders.filter((supplierOrder) => 
@@ -39,7 +81,7 @@ export default function SupplierOrders() {
 
   const statusLabels = {
     0: { text: "Non traité", color: "bg-gray-500 text-white" },
-    1: { text: "Commande", color: "bg-blue-500 text-white" },
+    1: { text: "Commandé", color: "bg-blue-500 text-white" },
     2: { text: "Expédié", color: "bg-orange-500 text-white" },
     3: { text: "Reçu", color: "bg-customGreen text-white" },
     4: { text: "Annulé", color: "bg-red-500 text-white" },
@@ -51,6 +93,7 @@ export default function SupplierOrders() {
   return (
     <div className="min-h-screen flex flex-col">
   
+       <Toaster />
     <main className="flex-grow p-8">
     
       <div className="flex flex-row justify-between mb-4 itweems-center">
@@ -88,14 +131,39 @@ export default function SupplierOrders() {
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalQuantity}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalPrice.toFixed(2)} €</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">              
-                    <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 
-                          ${supplierOrder.payment_status == 0 ? "bg-red-500 text-white" : "bg-customGreen text-white"}`}>
-                          {supplierOrder.payment_status == 0 ? "À payer" : "Payée"}
-                    </span>
+                      <Select
+                        value={supplierOrder.payment_status.toString()}
+                        onValueChange={(value) => handleStatusChange(supplierOrder.id, supplierOrder.status, value)}
+                      >
+                      <SelectTrigger className={`px-3 py-2 rounded-md text-white ${supplierOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
+                        <SelectValue>{supplierOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectGroup>
+                        <SelectItem value="0">À payer</SelectItem>
+                        <SelectItem value="1">Payée</SelectItem>
+                          </SelectGroup>
+                        </SelectContent>
+                      </Select>
                       </td>                    
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                     <span className={`inline-flex rounded-xl p-2.5 text-xs font-semibold leading-5 ${color}`}>{text}</span>
-                    </td>        
+                    <Select
+                      value={supplierOrder.status.toString()}
+                      onValueChange={(value) => handleStatusChange(supplierOrder.id, value, supplierOrder.payment_status)}
+                    >
+                      <SelectTrigger className={`px-3 py-2 rounded-md text-white ${color}`}>
+                        <SelectValue>{text}</SelectValue>
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                        <SelectItem value="0">Non traité</SelectItem>
+                        <SelectItem value="1">Commandé</SelectItem>
+                        <SelectItem value="2">Expédié</SelectItem>
+                        <SelectItem value="3">Reçu</SelectItem>
+                        <SelectItem value="4">Annulé</SelectItem>
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>                    </td>        
                     <td className="px-6 py-4 text-center whitespace-nowrap">{new Date(supplierOrder?.reception_date).toLocaleDateString() || "Inconnu"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       <Button className="bg-customGreen">Voir</Button>
