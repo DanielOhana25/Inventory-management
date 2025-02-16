@@ -41,8 +41,32 @@ export default function ClientOrders() {
     }
 };
 
-const handleStatusChange = async(clientOrderID, status, newStatus) => {
+const handleStatusChange = async(clientOrderID, status, paymentStatus) => {
   try {
+     const order = clientOrders.find((order) => order.id === clientOrderID);
+ 
+     // Vérifier si la transition est de "Non traité" (0) à "Prêt à la livraison" (1)
+     if (order.status === 0 && status === "1") {
+       const response = await fetch('/api/product');
+       const productsData = await response.json();
+ 
+       // Vérifier si le stock est suffisant pour chaque produit de la commande
+       const insufficientInventory = order.client_order_products.some((item) => {
+         const productStock = productsData.find((p) => p.id === item.product_id);
+         return productStock && productStock.available_quantity < item.quantity; // Si le stock disponible est inférieur à la quantité commandée, la condition est vraie.
+       });
+ 
+       if (insufficientInventory) {
+         toast({
+           title: "Stock insuffisant",
+           description: "Impossible de mettre à jour : certains produits ne sont pas en stock.",
+           variant: "destructive",
+         });
+         return;
+       }
+     }
+ 
+     // Mettre à jour si toutes les vérifications sont passées
     await fetch('/api/client-orders', {
       method: 'PATCH',
       headers: {
@@ -51,7 +75,7 @@ const handleStatusChange = async(clientOrderID, status, newStatus) => {
       body: JSON.stringify({
         id: clientOrderID,
         status: status,
-        payment_status: parseInt(newStatus),
+        payment_status: parseInt(paymentStatus),
       }),
     });
     toast({
