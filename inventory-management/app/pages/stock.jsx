@@ -62,7 +62,14 @@ const fetchProducts = async () => {
         description: "Les quantités ne peuvent pas être négatives.",
         variant: "destructive",
       });
-      return; // Empêche l'exécution de la mise à jour
+      return;
+    }
+
+    const initialQuantity = products.find((product) => product.id === selectedProduct.id).quantity;
+
+    // MAJ du stock disponible si seulememt la quantité totale est modifiée
+    if ( selectedProduct.quantity !== initialQuantity) {
+      selectedProduct.available_quantity += selectedProduct.quantity - initialQuantity;
     }
 
     setIsLoading(true);
@@ -80,6 +87,12 @@ const fetchProducts = async () => {
       })
       await fetchProducts();
       setSelectedProduct(null);
+
+      toast({
+        title: "Succès",
+        description: "Les quantités ont été mises à jour avec succès.",
+        variant: "success",
+      });
     }
     catch(error) {
       console.error("Erreur lors de la mise à jour de l'inventaire :", error);
