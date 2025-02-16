@@ -83,6 +83,7 @@ function NavLink({ to, text, location }) {
       className={`p-2.5 rounded-lg ${
         location.pathname === to ? "bg-white text-customGreen" : "text-white hover:bg-white hover:text-customGreen"
       }`}
+      onClick={() => setMenuOpen(false)} // Ferme le menu après le clic
     >
       {text}
     </Link>

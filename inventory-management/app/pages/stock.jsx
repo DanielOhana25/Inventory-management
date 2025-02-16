@@ -20,6 +20,7 @@ export default function Stock() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -102,6 +103,7 @@ const fetchProducts = async () => {
     }
     finally {
       setIsLoading(false);
+      setIsDialogOpen(false); // Ferme le modal après la mise à jour
     }
   }
 
@@ -160,10 +162,14 @@ const fetchProducts = async () => {
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                     
-                    <Dialog>
+                    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                       <DialogTrigger asChild>
                         <Button
-                          onClick={() => setSelectedProduct(product)}
+                          onClick={() => {
+                            setIsDialogOpen(true);
+                            setSelectedProduct(product)
+                          }
+                        }
                           variant="default" 
                           className="bg-customGreen"
                         >
