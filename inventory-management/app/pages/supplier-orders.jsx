@@ -70,6 +70,17 @@ export default function SupplierOrders() {
       }
     };
 
+    // Helper function to determine if a status should be disabled
+const getAvailableStatuses = (currentStatus) => {
+  const allowedTransitions = {
+    0: ["0", "1"],
+    1: ["1", "2"],
+    2: ["2", "3"],
+    3: ["3", "4"],
+    4: ["4"], // Annulé, aucune modification possible
+  };
+  return allowedTransitions[currentStatus] || [];
+};
 
     const handleSearch = (term) => {
       const lowercasedTerm = term.toLowerCase();
@@ -86,9 +97,6 @@ export default function SupplierOrders() {
     3: { text: "Reçu", color: "bg-customGreen text-white" },
     4: { text: "Annulé", color: "bg-red-500 text-white" },
   };
-  
-  
-
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -156,11 +164,9 @@ export default function SupplierOrders() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                        <SelectItem value="0">Non traité</SelectItem>
-                        <SelectItem value="1">Commandé</SelectItem>
-                        <SelectItem value="2">Expédié</SelectItem>
-                        <SelectItem value="3">Reçu</SelectItem>
-                        <SelectItem value="4">Annulé</SelectItem>
+                          {getAvailableStatuses(supplierOrder.status).map((status) => (
+                            <SelectItem key={status} value={status}>{statusLabels[status].text}</SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>                    </td>        

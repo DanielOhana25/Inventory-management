@@ -42,7 +42,6 @@ export default function ClientOrders() {
 };
 
 const handleStatusChange = async(clientOrderID, status, newStatus) => {
-  console.log("hello");
   try {
     await fetch('/api/client-orders', {
       method: 'PATCH',
@@ -72,6 +71,19 @@ const handleStatusChange = async(clientOrderID, status, newStatus) => {
     });
   }
 }
+
+
+// Helper function to determine if a status should be disabled
+const getAvailableStatuses = (currentStatus) => {
+  const allowedTransitions = {
+    0: ["0", "1"],
+    1: ["1", "2"],
+    2: ["2", "3"],
+    3: ["3", "4"],
+    4: ["4"], // Annulé, aucune modification possible
+  };
+  return allowedTransitions[currentStatus] || [];
+};
 
 const handleSearch = (term) => {
   const lowercasedTerm = term.toLowerCase();
@@ -158,13 +170,11 @@ const handleSearch = (term) => {
                         <SelectValue>{text}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectGroup>
-                        <SelectItem value="0">Non traité</SelectItem>
-                        <SelectItem value="1">Prêt à la livraison</SelectItem>
-                        <SelectItem value="2">Expédié</SelectItem>
-                        <SelectItem value="3">Reçu</SelectItem>
-                        <SelectItem value="4">Annulé</SelectItem>
-                        </SelectGroup>
+                      <SelectGroup>
+                        {getAvailableStatuses(clientOrder.status).map((status) => (
+                          <SelectItem key={status} value={status}>{statusLabels[status].text}</SelectItem>
+                        ))}
+                      </SelectGroup>
                       </SelectContent>
                     </Select>
                     </td>
