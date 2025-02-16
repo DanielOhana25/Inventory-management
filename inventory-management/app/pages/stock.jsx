@@ -65,12 +65,15 @@ const fetchProducts = async () => {
       return;
     }
 
-    const initialQuantity = products.find((product) => product.id === selectedProduct.id).quantity;
-
     // MAJ du stock disponible si seulememt la quantité totale est modifiée
+    const initialQuantity = products.find((product) => product.id === selectedProduct.id).quantity;
     if ( selectedProduct.quantity !== initialQuantity) {
       selectedProduct.available_quantity += selectedProduct.quantity - initialQuantity;
+       
+      if(selectedProduct.available_quantity < 0) {
+        selectedProduct.available_quantity = 0;
     }
+  }
 
     setIsLoading(true);
     try {
