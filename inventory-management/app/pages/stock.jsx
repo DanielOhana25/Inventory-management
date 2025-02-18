@@ -198,7 +198,6 @@ const fetchProducts = async () => {
                           </div>
                         </DialogContent>
                     </Dialog>
-                    
                     </td>
                   </tr>
                 ))}
@@ -206,10 +205,7 @@ const fetchProducts = async () => {
             </table>
           </div>
         </div>
-
       </main>
-
-      
     </div>
   );
 }

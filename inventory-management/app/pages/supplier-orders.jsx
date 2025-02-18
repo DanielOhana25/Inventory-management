@@ -11,13 +11,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useToast } from "app/hooks/use-toast";
 import {Toaster} from "@/components/ui/toaster";
+import SupplierOrderForm from "@/components/forms/supplier-order-form";
 
 export default function SupplierOrders() {
 
     const [supplierOrders, setSupplierOrders] = useState([]);
     const [filteredSupplierOrders, setFilteredSupplierOrders] = useState([]);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    
+    //Toast
     const { toast } = useToast();
 
     useEffect(() => {
@@ -106,10 +117,25 @@ const getAvailableStatuses = (currentStatus) => {
     
       <div className="flex flex-row justify-between mb-4 itweems-center">
        <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
-       <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s">
-            <span className="md:hidden">+</span>
-            <span className="hidden md:inline">Nouvelle commande</span>
-      </Button>      </div>
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s"
+                    onClick={() => {
+                      setIsDialogOpen(true);
+                    }
+                  }>
+                      <span className="md:hidden">+</span>
+                      <span className="hidden md:inline">Nouvelle commande</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                  <DialogHeader>
+                      <DialogTitle>Nouvelle commande fournisseur</DialogTitle>
+                  </DialogHeader>
+                    <SupplierOrderForm  />
+                  </DialogContent>
+                </Dialog>    
+       </div>
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y-200">

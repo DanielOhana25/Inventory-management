@@ -11,14 +11,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { useToast } from "app/hooks/use-toast";
 import {Toaster} from "@/components/ui/toaster";
+import ClientOrderForm from "@/components/forms/client-order-form";
 
 export default function ClientOrders() {
 
   const [clientOrders, setClientOrders] = useState([]);
   const [filteredClientOrders, setFilteredClientOrders] = useState([]);
-  
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+
   //Toast
   const { toast } = useToast();
   
@@ -119,7 +129,7 @@ const handleSearch = (term) => {
 };
 
 
-  const statusLabels = {
+const statusLabels = {
     0: { text: "Non traité", color: "bg-gray-500 text-white" },
     1: { text: "Prete a la livraison", color: "bg-blue-500 text-white" },
     2: { text: "Expédié", color: "bg-orange-500 text-white" },
@@ -134,10 +144,25 @@ const handleSearch = (term) => {
       <main className="flex-grow p-8">
       <div className="flex flex-row justify-between mb-4 items-center">
            <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
-           <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s">
-            <span className="md:hidden">+</span>
-            <span className="hidden md:inline">Nouvelle commande</span>
-          </Button>
+
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s"
+              onClick={() => {
+                setIsDialogOpen(true);
+              }
+            }>
+                <span className="md:hidden">+</span>
+                <span className="hidden md:inline">Nouvelle commande</span>
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Nouvelle commande client</DialogTitle>
+            </DialogHeader>
+              <ClientOrderForm  />
+            </DialogContent>
+          </Dialog>
       </div>
       <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
