@@ -16,12 +16,19 @@ import {
     FormMessage,
   } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select } from "@/components/ui/select"
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import {useToast} from "app/hooks/use-toast"
 import {Toaster} from "@/components/ui/toaster"
 
 const formSchema = z.object({
-  username: z.string().nonempty("Veuillez choisir un client"),
+  client: z.string().nonempty("Veuillez choisir un client"),
 })
 
 export default function ClientOrderForm() {
@@ -33,6 +40,22 @@ export default function ClientOrderForm() {
 //Toast
 const { toast } = useToast();
 
+useEffect(() => {
+    fetchClients()
+  }, [])
+
+const fetchClients = async () => {
+  try{
+    const response = await fetch('/api/client');  
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }    const data = await response.json();
+    setClients(data);
+    
+  }
+  catch (error) {
+    console.error("Erreur lors de la récupération des clients :", error);
+  }}
 
 const form = useForm({
     resolver: zodResolver(formSchema),
@@ -51,13 +74,24 @@ const form = useForm({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="username"
+          name="client"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="shadcn" {...field} />
-              </FormControl>
+              <FormLabel>Client</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Selectionnez un client" />
+                    </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                        {clients.map((client) => (
+                        <SelectItem key={client.id} value={client.id}>
+                            {client.first_name} {client.last_name}
+                        </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
               <FormDescription>
                 This is your public display name.
               </FormDescription>
