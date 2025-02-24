@@ -61,13 +61,13 @@ export async function PATCH(req) {
       // Création de la commande
       const { data: order, error: orderError } = await supabase
         .from('client_orders')
-        .insert([{ client_id, status: "pending", payment_status: "unpaid" }])
+        .insert([{ client_id, status: "1", payment_status: "1" }])
         .select()
         .single();
   
       if (orderError) {
         console.error("Erreur lors de la création de la commande:", orderError);
-        return NextResponse.json({ message: "Erreur interne" }, { status: 500 });
+        return NextResponse.json({ message: `Erreur interne: ${orderError.message}` }, { status: 500 });
       }
   
       // Associer les produits à la commande
