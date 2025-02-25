@@ -35,7 +35,7 @@ const formSchema = z.object({
   ),
 });
 
-export default function ClientOrderForm() {
+export default function ClientOrderForm({ onClose }) {
 
     const [clients, setClients] = useState([]);
     const [products, setProducts] = useState([]);
@@ -154,9 +154,11 @@ const { fields, append, remove } = useFieldArray({
  const availableProducts = products.filter((p) => !selectedProductIds.includes(p.id));
 
 
-  function onSubmit(values) {
+  function onSubmit(values) {   
     console.log(values);
     CreateClientOrders(values);
+    onClose();
+    window.location.reload();
   }
 
   return (

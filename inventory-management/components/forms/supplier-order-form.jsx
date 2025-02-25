@@ -35,7 +35,7 @@ const formSchema = z.object({
   ),
 });
 
-export default function SupplierOrderForm() {
+export default function SupplierOrderForm({ onClose }) {
 
     const [suppliers, setSuppliers] = useState([]);
     const [clients, setClients] = useState([]);
@@ -158,6 +158,8 @@ const form = useForm({
  function onSubmit(values) {
   console.log(values);
   CreateClientSuppliers(values);
+  onClose();
+  window.location.reload();
 }
 
   return (

@@ -166,7 +166,7 @@ const statusLabels = {
             <DialogHeader>
                 <DialogTitle>Nouvelle commande client</DialogTitle>
             </DialogHeader>
-              <ClientOrderForm  />
+              <ClientOrderForm onClose={() => setIsDialogOpen(false)}  />
             </DialogContent>
           </Dialog>
       </div>

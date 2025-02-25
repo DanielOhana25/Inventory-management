@@ -145,7 +145,7 @@ const getAvailableStatuses = (currentStatus) => {
                   <DialogHeader>
                       <DialogTitle>Nouvelle commande fournisseur</DialogTitle>
                   </DialogHeader>
-                    <SupplierOrderForm  />
+                    <SupplierOrderForm onClose={() => setIsDialogOpen(false)}  />
                   </DialogContent>
                 </Dialog>    
        </div>
