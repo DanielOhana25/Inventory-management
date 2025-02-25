@@ -48,12 +48,22 @@ export default function SupplierOrders() {
           setSupplierOrders(data);
           setFilteredSupplierOrders(data);
         } catch (error) {
-          console.error("❌ Erreur lors de la récupération des commandes clients :", error);}
+          console.error("❌ Erreur lors de la récupération des commandes fournisseurs :", error);}
     };
 
-    const handleStatusChange = async(supplierOrderID, status, newStatus) => {
-      console.log("hello");
+    const handleStatusChange = async(supplierOrderID, status, newStatus, 
+      reception_date) => {
+
       try {
+
+        const order = supplierOrders.find((order) => order.id === supplierOrderID);
+
+    // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)
+     if(order.status === 2 && status === "3" ) {
+      reception_date = new Date().toISOString();
+     }
+
+
         await fetch('/api/supplier-orders', {
           method: 'PATCH',
           headers: {
@@ -63,6 +73,7 @@ export default function SupplierOrders() {
             id: supplierOrderID,
             status: status,
             payment_status: parseInt(newStatus),
+            reception_date: reception_date,
           }),
         });
         toast({
@@ -71,7 +82,9 @@ export default function SupplierOrders() {
           variant: "success",
         });
         fetchSupplierOrders(); // Rafraîchir les données après mise à jour
-      } catch (error) {
+      } 
+      
+      catch (error) {
         console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
         toast({
           title: "Erreur",
@@ -196,7 +209,7 @@ const getAvailableStatuses = (currentStatus) => {
                         </SelectGroup>
                       </SelectContent>
                     </Select>                    </td>        
-                    <td className="px-6 py-4 text-center whitespace-nowrap">{new Date(supplierOrder?.reception_date).toLocaleDateString() || "Inconnu"}</td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap">{supplierOrder.reception_date ? new Date(supplierOrder.reception_date).toLocaleDateString() : "-"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       <Button className="bg-customGreen">Voir</Button>
                     </td>

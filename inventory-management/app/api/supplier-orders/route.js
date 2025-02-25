@@ -23,8 +23,8 @@ export async function GET(req) {
 
 export async function PATCH(req) {
   try {
-    const { id, status, payment_status } = await req.json();
-    console.log(id, status, payment_status);
+    const { id, status, payment_status, reception_date } = await req.json();
+    console.log(id, status, payment_status, reception_date);
 
     if (!id || status === undefined || payment_status === undefined) {
       return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
@@ -32,7 +32,7 @@ export async function PATCH(req) {
 
     const { data, error } = await supabase
       .from('supplier_orders')
-      .update({ status, payment_status })
+      .update({ status, payment_status, reception_date })
       .eq('id', id);
 
     if (error) {
@@ -41,6 +41,54 @@ export async function PATCH(req) {
     }
 
     return NextResponse.json(data, { status: 200 });
+
+  } catch (error) {
+    console.error("Erreur serveur:", error);
+    return NextResponse.json({ message: "Erreur serveur" }, { status: 500 });
+  }
+}
+
+
+export async function POST(req) {
+  try {
+    const { supplier_id, products } = await req.json();
+
+    if (!supplier_id || !products || products.length === 0) {
+      return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
+    }
+
+     // Obtenir la date actuelle
+    const createdAt = new Date().toISOString();
+
+    // Création de la commande
+    const { data: order, error: orderError } = await supabase
+      .from('supplier_orders')
+      .insert([{ supplier_id, status: "0", payment_status: "0", created_at : createdAt }])
+      .select()
+      .single();
+
+    if (orderError) {
+      console.error("Erreur lors de la création de la commande:", orderError);
+      return NextResponse.json({ message: `Erreur interne: ${orderError.message}` }, { status: 500 });
+    }
+
+    // Associer les produits à la commande
+    const orderProducts = products.map(({ product_id, quantity }) => ({
+      supplier_order_id: order.id,
+      product_id,
+      quantity
+    }));
+
+    const { error: productsError } = await supabase
+      .from('supplier_order_products')
+      .insert(orderProducts);
+
+    if (productsError) {
+      console.error("Erreur lors de l'ajout des produits:", productsError);
+      return NextResponse.json({ message: "Erreur interne" }, { status: 500 });
+    }
+
+    return NextResponse.json({ message: "Commande créée avec succès" }, { status: 201 });
 
   } catch (error) {
     console.error("Erreur serveur:", error);

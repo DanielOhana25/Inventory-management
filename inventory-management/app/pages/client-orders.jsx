@@ -51,7 +51,7 @@ export default function ClientOrders() {
     }
 };
 
-const handleStatusChange = async(clientOrderID, status, paymentStatus) => {
+const handleStatusChange = async(clientOrderID, status, paymentStatus, reception_date) => {
   try {
      const order = clientOrders.find((order) => order.id === clientOrderID);
  
@@ -75,6 +75,11 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus) => {
          return;
        }
      }
+
+// Vérifier si la transition est de "Expedié" (2) à "Recu" (3)
+     if(order.status === 2 && status === "3" ) {
+      reception_date = new Date().toISOString();
+     }
  
      // Mettre à jour si toutes les vérifications sont passées
     await fetch('/api/client-orders', {
@@ -86,6 +91,7 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus) => {
         id: clientOrderID,
         status: status,
         payment_status: parseInt(paymentStatus),
+        reception_date: reception_date,
       }),
     });
     toast({
@@ -195,7 +201,7 @@ const statusLabels = {
                     <td className="px-6 py-4 text-center whitespace-nowrap">  
                     <Select
                       value={clientOrder.payment_status.toString()}
-                      onValueChange={(value) => handleStatusChange(clientOrder.id, clientOrder.status, value)}
+                      onValueChange={(value) => handleStatusChange(clientOrder.id, clientOrder.status, value, clientOrder.reception_date)}
                     >
                       <SelectTrigger className={`px-3 py-2 rounded-md text-white ${clientOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
                         <SelectValue>{clientOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
@@ -227,7 +233,7 @@ const statusLabels = {
                       </SelectContent>
                     </Select>
                     </td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.confirmed_reception_date ? new Date(clientOrder.confirmed_reception_date).toLocaleDateString() : "N/A"}</td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.reception_date ? new Date(clientOrder.reception_date).toLocaleDateString() : "-"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       <Button className="bg-customGreen">Voir</Button>
                     </td>

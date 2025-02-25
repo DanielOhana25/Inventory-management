@@ -39,7 +39,6 @@ export default function ClientOrderForm() {
 
     const [clients, setClients] = useState([]);
     const [products, setProducts] = useState([]);
-    const [clientOrder, setClientOrder] = useState(null);
 
 //Toast
 const { toast } = useToast();
@@ -134,8 +133,6 @@ const CreateClientOrders = async (values) => {
     });
   }
 }
-
-
 
 const form = useForm({
     resolver: zodResolver(formSchema),

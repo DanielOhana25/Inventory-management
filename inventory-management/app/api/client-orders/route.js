@@ -25,8 +25,8 @@ export async function GET(req) {
 
 export async function PATCH(req) {
     try {
-      const { id, status, payment_status } = await req.json();
-      console.log(id, status, payment_status);
+      const { id, status, payment_status, reception_date } = await req.json();
+      console.log(id, status, payment_status, reception_date);
   
       if (!id || status === undefined || payment_status === undefined) {
         return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
@@ -34,7 +34,7 @@ export async function PATCH(req) {
   
       const { data, error } = await supabase
         .from('client_orders')
-        .update({ status, payment_status })
+        .update({ status, payment_status, reception_date })
         .eq('id', id);
   
       if (error) {
@@ -57,11 +57,14 @@ export async function PATCH(req) {
       if (!client_id || !products || products.length === 0) {
         return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
       }
+
+       // Obtenir la date actuelle
+      const createdAt = new Date().toISOString();
   
       // Création de la commande
       const { data: order, error: orderError } = await supabase
         .from('client_orders')
-        .insert([{ client_id, status: "1", payment_status: "1" }])
+        .insert([{ client_id, status: "0", payment_status: "0", created_at : createdAt }])
         .select()
         .single();
   
