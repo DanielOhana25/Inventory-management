@@ -97,9 +97,9 @@ export default function SupplierOrders() {
     // Helper function to determine if a status should be disabled
 const getAvailableStatuses = (currentStatus) => {
   const allowedTransitions = {
-    0: ["0", "1"],
-    1: ["1", "2"],
-    2: ["2", "3"],
+    0: ["0", "1", "4"],
+    1: ["1", "2", "4"],
+    2: ["2", "3", "4"],
     3: ["3", "4"],
     4: ["4"], // Annulé, aucune modification possible
   };
