@@ -179,7 +179,7 @@ const filteredProducts = selectedSupplier
               <FormLabel>Fournisseur</FormLabel>
                <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger>
+                <SelectTrigger disabled={!!field.value}>
                     <SelectValue placeholder="Selectionnez un fournisseur" />
                 </SelectTrigger>
               </FormControl>
@@ -208,7 +208,7 @@ const filteredProducts = selectedSupplier
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
               <SelectValue placeholder="Sélectionnez un produit"/>
-                {/* {products.find((p) => p.id === field.value)?.name || "Sélectionnez un produit"} */}
+                {products.find((p) => p.id === field.value)?.name}
               </SelectTrigger>
               <SelectContent>
                 {availableProducts.map((p) => (
