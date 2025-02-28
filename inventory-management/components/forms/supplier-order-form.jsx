@@ -150,9 +150,15 @@ const form = useForm({
     name: "products",
   });
 
+// Récupération de l'ID du fournisseur sélectionné
+const selectedSupplier = form.watch("supplier");
+const filteredProducts = selectedSupplier
+  ? products.filter((p) => p.supplier_id === selectedSupplier)
+  : [];
+
    // Liste des produits disponibles après suppression des produits déjà choisis
  const selectedProductIds = form.watch("products").map((p) => p.id);
- const availableProducts = products.filter((p) => !selectedProductIds.includes(p.id));
+ const availableProducts = filteredProducts.filter((p) => !selectedProductIds.includes(p.id));
 
 
  function onSubmit(values) {
@@ -201,9 +207,8 @@ const form = useForm({
           <FormControl>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-              <SelectValue placeholder="Sélectionnez un produit">
-                {products.find((p) => p.id === field.value)?.name || "Sélectionnez un produit"}
-              </SelectValue>
+              <SelectValue placeholder="Sélectionnez un produit"/>
+                {/* {products.find((p) => p.id === field.value)?.name || "Sélectionnez un produit"} */}
               </SelectTrigger>
               <SelectContent>
                 {availableProducts.map((p) => (
@@ -246,11 +251,16 @@ const form = useForm({
       </div>
     ))}
     
-    <Button type="button" className="bg-customGreen" onClick={() => append({ id: "", quantity: 1 })}  
-    disabled={availableProducts.length === 0} // Désactiver si tous les produits sont sélectionnés
-    >
-      + Ajouter un produit
-    </Button>
+    {selectedSupplier && (
+        <Button
+          type="button"
+          className="bg-customGreen"
+          onClick={() => append({ id: "", quantity: 1 })}
+          disabled={availableProducts.length === 0}
+        >
+          + Ajouter un produit
+        </Button>
+      )}
 
 <FormDescription>
   This is your public display name.
