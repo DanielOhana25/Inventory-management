@@ -47,7 +47,7 @@ export default function ClientOrders() {
       setClientOrders(data);
       setFilteredClientOrders(data);
     } catch (error) {
-      console.error("❌ Erreur lors de la récupération des commandes clients :", error);
+      console.error("❌ Error fetching client orders :", error);
     }
 };
 
@@ -68,8 +68,8 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus, reception
  
        if (insufficientInventory) {
          toast({
-           title: "Stock insuffisant",
-           description: "Impossible de mettre à jour : certains produits ne sont pas en stock.",
+           title: "Insufficient inventory",
+           description: "Cannot update: some products are out of inventory.",
            variant: "destructive",
          });
          return;
@@ -95,18 +95,18 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus, reception
       }),
     });
     toast({
-      title: "Succès",
-      description: "Statut de paiement mis à jour avec succès",
+      title: "Success",
+      description: "Payment status successfully updated",
       variant: "success",
     });
     
     fetchClientOrders(); // Rafraîchir les données après mise à jour
   }
   catch(error) {
-    console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
+    console.error("❌ Error updating payment status: ", error);
     toast({
-      title: "Erreur",
-      description: "Erreur lors de la mise à jour du statut de paiement.",
+      title: "Error",
+      description: "Error updating payment status.",
       variant: "destructive",
     });
   }
@@ -136,11 +136,11 @@ const handleSearch = (term) => {
 
 
 const statusLabels = {
-    0: { text: "Non traité", color: "bg-gray-500 text-white" },
-    1: { text: "Prete a la livraison", color: "bg-blue-500 text-white" },
-    2: { text: "Expédié", color: "bg-orange-500 text-white" },
-    3: { text: "Reçu", color: "bg-customGreen text-white" },
-    4: { text: "Annulé", color: "bg-red-500 text-white" },
+    0: { text: "Untreated", color: "bg-gray-500 text-white" },
+    1: { text: "Ready to ship", color: "bg-blue-500 text-white" },
+    2: { text: "Shipped", color: "bg-orange-500 text-white" },
+    3: { text: "Received", color: "bg-customGreen text-white" },
+    4: { text: "Cancelled", color: "bg-red-500 text-white" },
   };
 
   return (
@@ -149,7 +149,7 @@ const statusLabels = {
       <Toaster />
       <main className="flex-grow p-8">
       <div className="flex flex-row justify-between mb-4 items-center">
-           <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
+           <SearchBar onSearch={handleSearch} placeholder={"Search..."} />
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
@@ -159,12 +159,12 @@ const statusLabels = {
               }
             }>
                 <span className="md:hidden">+</span>
-                <span className="hidden md:inline">Nouvelle commande</span>
+                <span className="hidden md:inline">New order</span>
               </Button>
             </DialogTrigger>
             <DialogContent>
             <DialogHeader>
-                <DialogTitle>Nouvelle commande client</DialogTitle>
+                <DialogTitle>New client order</DialogTitle>
             </DialogHeader>
               <ClientOrderForm onClose={() => setIsDialogOpen(false)}  />
             </DialogContent>
@@ -175,13 +175,13 @@ const statusLabels = {
             <table className="min-w-full divide-y-200">
               <thead className="bg-customGreenSecondary">
                 <tr>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Date de creation</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Nom & Prenom</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Qte d'artciles</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Montant TTC</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Statut de paiement</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Statut</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Date de reception</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Creation Date</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Name</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantity of articles</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Total Amount</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Payment Status</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Status</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Reception Date</th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Details</th>
                 </tr>
               </thead>
@@ -189,7 +189,7 @@ const statusLabels = {
               {filteredClientOrders.map((clientOrder) => {
                  const totalQuantity = clientOrder.client_order_products.reduce((acc, item) => acc + item.quantity, 0);
                  const totalPrice = clientOrder.client_order_products.reduce((acc, item) => acc + (item.quantity * (item.product?.price_ht || 0)), 0);
-                 const { text, color } = statusLabels[clientOrder?.status] || { text: "Pas de statut", color: "bg-gray-200 text-gray-800" };
+                 const { text, color } = statusLabels[clientOrder?.status] || { text: "no status", color: "bg-gray-200 text-gray-800" };
 
               return(
                   <tr key={clientOrder.id}  className="hover:bg-gray-200 transition-all duration-300">
@@ -204,12 +204,12 @@ const statusLabels = {
                       onValueChange={(value) => handleStatusChange(clientOrder.id, clientOrder.status, value, clientOrder.reception_date)}
                     >
                       <SelectTrigger className={`px-3 py-2 rounded-md text-white ${clientOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
-                        <SelectValue>{clientOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
+                        <SelectValue>{clientOrder.payment_status === 0 ? "To pay" : "Paid"} </SelectValue>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectGroup>
-                        <SelectItem value="0">À payer</SelectItem>
-                        <SelectItem value="1">Payée</SelectItem>
+                        <SelectItem value="0">To pay</SelectItem>
+                        <SelectItem value="1">Paid</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>
@@ -235,7 +235,7 @@ const statusLabels = {
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{clientOrder.reception_date ? new Date(clientOrder.reception_date).toLocaleDateString() : "-"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                      <Button className="bg-customGreen">Voir</Button>
+                      <Button className="bg-customGreen">View</Button>
                     </td>
                   </tr>
               );

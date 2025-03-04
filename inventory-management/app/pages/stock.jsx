@@ -39,7 +39,7 @@ const fetchProducts = async () => {
     
   }
   catch (error) {
-    console.error("Erreur lors de la récupération des produits :", error);
+    console.error("Error fetching products :", error);
   }}
 
   const handleEditInventory = async(data) => {
@@ -49,8 +49,8 @@ const fetchProducts = async () => {
     // Vérification avant l'enregistrement que la qte dispo ne soit pas superieur à la qte totale
     if (selectedProduct.quantity < selectedProduct.available_quantity) {
       toast({
-        title: "Erreur",
-        description: "La quantité totale ne peut pas être inférieure à la quantité disponible.",
+        title: "Error",
+        description: "Total quantity cannot be less than available quantity.",
         variant: "destructive",
       });
       return;  // Empêche l'exécution de la mise à jour
@@ -59,8 +59,8 @@ const fetchProducts = async () => {
    // Vérification que les quantités ne soient pas négatives
     if (selectedProduct.quantity < 0 || selectedProduct.available_quantity < 0) {
       toast({
-        title: "Erreur",
-        description: "Les quantités ne peuvent pas être négatives.",
+        title: "Error",
+        description: "Quantities cannot be negative.",
         variant: "destructive",
       });
       return;
@@ -93,13 +93,13 @@ const fetchProducts = async () => {
       setSelectedProduct(null);
 
       toast({
-        title: "Succès",
-        description: "Les quantités ont été mises à jour avec succès.",
+        title: "Success",
+        description: "Quantities have been successfully updated.",
         variant: "success",
       });
     }
     catch(error) {
-      console.error("Erreur lors de la mise à jour de l'inventaire :", error);
+      console.error("Error updating inventory:", error);
     }
     finally {
       setIsLoading(false);
@@ -123,18 +123,18 @@ const fetchProducts = async () => {
       {/* Main */}
       <main className="flex-grow md:p-8">
       <div className="mb-4">
-                  <SearchBar onSearch={handleSearch} placeholder={"Rechercher un produit dans le stock..."} />
+                  <SearchBar onSearch={handleSearch} placeholder={"Search for a product in stock..."} />
       </div>
         <div className="bg-white rounded-xl shadow-md overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-customGreenSecondary">
                 <tr>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">image</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Nom</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Fourninsseur</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantite disponible</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantite</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Image</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Name</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Supplier</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Available Quantity</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Real Quantity</th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Action</th>
 
                 </tr>
@@ -153,7 +153,7 @@ const fetchProducts = async () => {
                       {product.name}
                     </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                    {product.suppliers ? product.suppliers.supplier_name : 'Inconnu'}                    </td>
+                    {product.suppliers ? product.suppliers.supplier_name : 'Unknown'}                    </td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
                       <span className={`inline-flex rounded-full p-2.5 leading-5 ${product.available_quantity <= 5 ? "bg-red-500 text-white" : "bg-customGreen text-white"}`}>{product.available_quantity}</span>
                     </td>
@@ -173,27 +173,27 @@ const fetchProducts = async () => {
                           variant="default" 
                           className="bg-customGreen"
                         >
-                          Editer
+                          Edit
                         </Button>
                       </DialogTrigger>
                       <DialogContent>
                           <DialogHeader>
-                            <DialogTitle>Modifier les quantités</DialogTitle>
+                            <DialogTitle>Edit Quantities</DialogTitle>
                           </DialogHeader>
                           <div className="flex flex-col gap-4">
-                            <Label className="text-sm font-semibold">Quantité disponible</Label>
+                            <Label className="text-sm font-semibold">Available Quantity</Label>
                             <Input
                               type="number"
                               value={selectedProduct?.available_quantity || ""}
                               onChange={(e) => setSelectedProduct({ ...selectedProduct, available_quantity:  Number(e.target.value) })}
                             />
-                            <Label className="text-sm font-semibold">Quantité générale</Label>
+                            <Label className="text-sm font-semibold">Real Quantity</Label>
                             <Input
                               type="number"
                               value={selectedProduct?.quantity || ""}
                               onChange={(e) => {setSelectedProduct({ ...selectedProduct, quantity: Number(e.target.value) });}}                            />
                             <Button onClick={handleEditInventory} disabled={isLoading} className="bg-customGreen">
-                              {isLoading ? "Mise à jour..." : "Enregistrer"}
+                              {isLoading ? "Updating..." : "Save"}
                             </Button>
                           </div>
                         </DialogContent>

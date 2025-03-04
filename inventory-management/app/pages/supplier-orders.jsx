@@ -77,18 +77,17 @@ export default function SupplierOrders() {
           }),
         });
         toast({
-          title: "Succès",
-          description: "Statut de paiement mis à jour avec succès",
+          title: "Success",
+          description: "Payment status updated successfully",
           variant: "success",
         });
         fetchSupplierOrders(); // Rafraîchir les données après mise à jour
       } 
       
       catch (error) {
-        console.error("❌ Erreur lors de la mise à jour du statut de paiement :", error);
         toast({
-          title: "Erreur",
-          description: "Erreur lors de la mise à jour du statut de paiement.",
+          title: "Error",
+          description: "Error updating payment status.",
           variant: "destructive",
         });
       }
@@ -115,11 +114,11 @@ const getAvailableStatuses = (currentStatus) => {
     };
 
   const statusLabels = {
-    0: { text: "Non traité", color: "bg-gray-500 text-white" },
-    1: { text: "Commandé", color: "bg-blue-500 text-white" },
-    2: { text: "Expédié", color: "bg-orange-500 text-white" },
-    3: { text: "Reçu", color: "bg-customGreen text-white" },
-    4: { text: "Annulé", color: "bg-red-500 text-white" },
+    0: { text: "Untreated", color: "bg-gray-500 text-white" },
+    1: { text: "Ordered", color: "bg-blue-500 text-white" },
+    2: { text: "Shipped", color: "bg-orange-500 text-white" },
+    3: { text: "Received", color: "bg-customGreen text-white" },
+    4: { text: "Canceled", color: "bg-red-500 text-white" },
   };
 
   return (
@@ -129,7 +128,7 @@ const getAvailableStatuses = (currentStatus) => {
     <main className="flex-grow p-8">
     
       <div className="flex flex-row justify-between mb-4 itweems-center">
-       <SearchBar onSearch={handleSearch} placeholder={"Rechercher..."} />
+       <SearchBar onSearch={handleSearch} placeholder={"Search..."} />
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                   <DialogTrigger asChild>
                     <Button className="bg-customGreen flex items-center justify-center text-white text-xl w-12 h-12 rounded-full ml-10 md:rounded-lg md:w-auto md:px-6 md:py-2s"
@@ -138,12 +137,12 @@ const getAvailableStatuses = (currentStatus) => {
                     }
                   }>
                       <span className="md:hidden">+</span>
-                      <span className="hidden md:inline">Nouvelle commande</span>
+                      <span className="hidden md:inline">New Order</span>
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                   <DialogHeader>
-                      <DialogTitle>Nouvelle commande fournisseur</DialogTitle>
+                      <DialogTitle>New Supplier Order</DialogTitle>
                   </DialogHeader>
                     <SupplierOrderForm onClose={() => setIsDialogOpen(false)}  />
                   </DialogContent>
@@ -154,13 +153,13 @@ const getAvailableStatuses = (currentStatus) => {
             <table className="min-w-full divide-y-200">
               <thead className="bg-customGreenSecondary">
                 <tr>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Date de creation</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Nom & Prenom</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Qte d'articles</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Montant TTC</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Statut de paiement</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Statut</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Date de reception</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Creation Date</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Name</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Quantity of articles</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Total Amount</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Payment Status</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Status</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Reception Date</th>
                   <th className="px-6 py-4 text-center text-sm font-semibold text-gray-900">Details</th>
                 </tr>
               </thead>
@@ -168,13 +167,13 @@ const getAvailableStatuses = (currentStatus) => {
                 {filteredSupplierOrders.map((supplierOrder) => {
                                    const totalQuantity = supplierOrder.supplier_order_products.reduce((acc, item) => acc + item.quantity, 0);
                                    const totalPrice = supplierOrder.supplier_order_products.reduce((acc, item) => acc + (item.quantity * (item.product?.price_ht || 0)), 0);
-                                   const { text, color } = statusLabels[supplierOrder?.status] || { text: "Pas de statut", color: "bg-gray-200 text-gray-800" };
+                                   const { text, color } = statusLabels[supplierOrder?.status] || { text: "No Status", color: "bg-gray-200 text-gray-800" };
                   return (
                 
                   <tr key={supplierOrder.id} className="hover:bg-gray-200 transition-all duration-300">
                     
                     <td className="px-6 py-4 text-center whitespace-nowrap">{new Date(supplierOrder.created_at).toLocaleDateString()}</td>
-                    <td className="px-6 py-4 text-center whitespace-nowrap">{supplierOrder.suppliers?.supplier_name || "Inconnu"}</td>
+                    <td className="px-6 py-4 text-center whitespace-nowrap">{supplierOrder.suppliers?.supplier_name || "Unknown"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalQuantity}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">{totalPrice.toFixed(2)} €</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">              
@@ -183,12 +182,12 @@ const getAvailableStatuses = (currentStatus) => {
                         onValueChange={(value) => handleStatusChange(supplierOrder.id, supplierOrder.status, value)}
                       >
                       <SelectTrigger className={`px-3 py-2 rounded-md text-white ${supplierOrder.payment_status == 0 ? "bg-red-500" : "bg-customGreen"}`}>
-                        <SelectValue>{supplierOrder.payment_status === 0 ? "À payer" : "Payée"} </SelectValue>
+                        <SelectValue>{supplierOrder.payment_status === 0 ? "To Pay" : "Paid"} </SelectValue>
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                        <SelectItem value="0">À payer</SelectItem>
-                        <SelectItem value="1">Payée</SelectItem>
+                        <SelectItem value="0">To Pay</SelectItem>
+                        <SelectItem value="1">Paid</SelectItem>
                           </SelectGroup>
                         </SelectContent>
                       </Select>
@@ -211,7 +210,7 @@ const getAvailableStatuses = (currentStatus) => {
                     </Select>                    </td>        
                     <td className="px-6 py-4 text-center whitespace-nowrap">{supplierOrder.reception_date ? new Date(supplierOrder.reception_date).toLocaleDateString() : "-"}</td>
                     <td className="px-6 py-4 text-center whitespace-nowrap">
-                      <Button className="bg-customGreen">Voir</Button>
+                      <Button className="bg-customGreen">View</Button>
                     </td>
                   </tr>
                 )}

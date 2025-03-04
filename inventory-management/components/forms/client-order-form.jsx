@@ -26,11 +26,11 @@ import {
 import {useToast} from "app/hooks/use-toast"
 
 const formSchema = z.object({
-  client: z.string().nonempty("Veuillez choisir un client"),
+  client: z.string().nonempty("Select a client"),
   products: z.array(
     z.object({
-      id: z.string().nonempty("Veuillez choisir un produit"),
-      quantity: z.number().min(1, "La quantité doit être au moins 1"),
+      id: z.string().nonempty("Select a product"),
+      quantity: z.number().min(1, "Quantity must be at least 1"),
     })
   ),
 });
@@ -58,7 +58,7 @@ const fetchClients = async () => {
     
   }
   catch (error) {
-    console.error("Erreur lors de la récupération des clients :", error);
+    console.error("Error fetching clients : ", error);
   }}
 
 const fetchProducts = async () => {
@@ -71,7 +71,7 @@ const fetchProducts = async () => {
 
   }
   catch (error) {
-    console.error("Erreur lors de la récupération des produits :", error);
+    console.error("Error fetching products :", error);
   }}
 
 const CreateClientOrders = async (values) => {
@@ -80,8 +80,8 @@ const CreateClientOrders = async (values) => {
     // Vérifier si les champs obligatoires sont remplis
     if (!client || products.length === 0) {
     toast({
-      title: "Erreur",
-      description: "Veuillez sélectionner un client et au moins un produit.",
+      title: "Error",
+      description: "Select a client and at least one product",
       variant: "destructive",
     });
     return;
@@ -108,12 +108,12 @@ const CreateClientOrders = async (values) => {
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.message || "Erreur lors de la création de la commande.");
+    throw new Error(data.message || "Error creating the order.");
   }
 
   toast({
-    title: "Commande créée",
-    description: "Votre commande a été ajoutée avec succès.",
+    title: "Order created",
+    description: "Your order has been successfully added.",
     variant: "success",
   });
 
@@ -125,10 +125,10 @@ const CreateClientOrders = async (values) => {
 
   }
   catch(error){
-    console.log("Erreur lors de la creation de la commande",error)
+    console.log("Error creating the order.",error)
     toast({
-      title: "Erreur",
-      description: "Impossible de créer la commande. Veuillez réessayer.",
+      title: "Error",
+      description: "Unable to create the order. Please try again.",
       variant: "destructive",
     });
   }
@@ -173,7 +173,7 @@ const { fields, append, remove } = useFieldArray({
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
                     <SelectTrigger>
-                        <SelectValue placeholder="Selectionnez un client" />
+                        <SelectValue placeholder="Select a client" />
                     </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -201,8 +201,8 @@ const { fields, append, remove } = useFieldArray({
           <FormControl>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <SelectTrigger>
-              <SelectValue placeholder="Sélectionnez un produit">
-                {products.find((p) => p.id === field.value)?.name || "Sélectionnez un produit"}
+              <SelectValue placeholder="Select a product">
+                {products.find((p) => p.id === field.value)?.name || "Select a product"}
               </SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -249,7 +249,7 @@ const { fields, append, remove } = useFieldArray({
 <Button type="button" className="bg-customGreen" onClick={() => append({ id: "", quantity: 1 })}  
 disabled={availableProducts.length === 0} // Désactiver si tous les produits sont sélectionnés
 >
-  + Ajouter un produit
+  + Add a product
 </Button>
 
         <FormDescription>
