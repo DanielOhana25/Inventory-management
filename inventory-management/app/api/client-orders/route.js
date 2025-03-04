@@ -89,7 +89,7 @@ export async function PATCH(req) {
         return NextResponse.json({ message: "Erreur interne" }, { status: 500 });
       }
   
-      return NextResponse.json({ message: "Commande créée avec succès" }, { status: 201 });
+      return NextResponse.json({ message: "Your order has been successfully added." }, { status: 201 });
   
     } catch (error) {
       console.error("Erreur serveur:", error);
