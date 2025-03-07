@@ -61,6 +61,7 @@ export default function SupplierOrders() {
     // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)
      if(order.status === 2 && status === "3" ) {
       reception_date = new Date().toISOString();
+      console.log(reception_date);
      }
 
 
