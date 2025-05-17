@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route, Link , useLocation } from "reac
 import Stock from "./pages/stock";
 import SupplierOrders from "./pages/supplier-orders";
 import ClientOrders from "./pages/client-orders";
+import Dashboard from "./pages/dashboard";
 
 export default function RootLayout() {  
 
@@ -47,6 +48,7 @@ function AppContent() {
             <NavLink to="/" text="Stock" location={location} />
             <NavLink to="/supplier-orders" text="Commandes fournisseurs" location={location} />
             <NavLink to="/client-orders" text="Commandes Clients" location={location} />
+            <NavLink to="/dashboard" text="Dashboard" location={location} />
           </nav>
             </header>
 
@@ -55,6 +57,8 @@ function AppContent() {
             <NavLink to="/" text="Stock" location={location} />
             <NavLink to="/supplier-orders" text="Commandes fournisseurs" location={location} />
             <NavLink to="/client-orders" text="Commandes Clients" location={location} />
+            <NavLink to="/dashboard" text="Dashboard" location={location} />
+
           </nav>
         )}
 
@@ -64,6 +68,8 @@ function AppContent() {
             <Route path="/" element={<Stock />} />
             <Route path="/supplier-orders" element={<SupplierOrders />} />
             <Route path="/client-orders" element={<ClientOrders />} />
+            <Route path="/dashboard" element={<Dashboard/>} />
+
           </Routes>
         </main>
 
