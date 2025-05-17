@@ -91,6 +91,27 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus, reception
 
      }
 
+     
+// Vérifier si la transition est de "Prêt à la livraison" (1) à "Expedié" (2)
+if(order.status === 1 && status === "2" ) {
+  const response = await fetch('/api/product');
+  const productsData = await response.json();
+
+// ✅ ICI : Met à jour le stock
+for (const item of order.client_order_products) {
+  const product = productsData.find((p) => p.id === item.product_id);
+  const newStock = product.quantity - item.quantity;
+
+  await fetch('/api/product', {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ id: product.id, available_quantity: product.available_quantity , quantity: newStock }),
+  });    
+}  
+}
+
 // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)
      if(order.status === 2 && status === "3" ) {
       reception_date = new Date().toISOString();
