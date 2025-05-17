@@ -165,7 +165,7 @@ const filteredProducts = selectedSupplier
   console.log(values);
   CreateClientSuppliers(values);
   onClose();
-  window.location.reload();
+ // window.location.reload();
 }
 
   return (

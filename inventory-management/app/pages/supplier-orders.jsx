@@ -51,19 +51,36 @@ export default function SupplierOrders() {
           console.error("❌ Erreur lors de la récupération des commandes fournisseurs :", error);}
     };
 
-    const handleStatusChange = async(supplierOrderID, status, newStatus, 
-      reception_date) => {
-
+    const handleStatusChange = async(supplierOrderID, status, newStatus, reception_date) => {
       try {
         const order = supplierOrders.find((order) => order.id === supplierOrderID);
-
-    // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)
-     if(order.status === 2 && status === "3" ) {
-      reception_date = new Date().toISOString();
-      console.log(reception_date);
-     }
-
-
+    
+        if(order.status === 2 && status === "3" ) {
+          reception_date = new Date().toISOString();
+          console.log(reception_date);
+          const response = await fetch('/api/product');
+          const productsData = await response.json();
+    
+          //  Met à jour le stock
+          for (const item of order.supplier_order_products) {
+            const product = productsData.find((p) => p.id === item.product_id);
+            const newStock = product.quantity + item.quantity;
+            const newAvailableStock = product.available_quantity + item.quantity;
+    
+            await fetch('/api/product', {
+              method: "PATCH",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                id: product.id,
+                available_quantity: newAvailableStock,
+                quantity: newStock,
+              }),
+            });    
+          }
+        }
+    
         await fetch('/api/supplier-orders', {
           method: 'PATCH',
           headers: {
@@ -76,15 +93,15 @@ export default function SupplierOrders() {
             reception_date: reception_date,
           }),
         });
+    
         toast({
           title: "Success",
           description: "Payment status updated successfully",
           variant: "success",
         });
+    
         fetchSupplierOrders(); // Rafraîchir les données après mise à jour
-      } 
-      
-      catch (error) {
+      } catch (error) {
         toast({
           title: "Error",
           description: "Error updating payment status.",
@@ -92,6 +109,7 @@ export default function SupplierOrders() {
         });
       }
     };
+    
 
     // Helper function to determine if a status should be disabled
 const getAvailableStatuses = (currentStatus) => {
