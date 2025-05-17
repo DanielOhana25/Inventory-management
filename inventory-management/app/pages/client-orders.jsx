@@ -74,6 +74,21 @@ const handleStatusChange = async(clientOrderID, status, paymentStatus, reception
          });
          return;
        }
+
+  // ✅ ICI : Met à jour le stock
+  for (const item of order.client_order_products) {
+    const product = productsData.find((p) => p.id === item.product_id);
+    const newStock = product.available_quantity - item.quantity;
+
+    await fetch('/api/product', {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id: product.id, available_quantity: newStock, quantity: product.quantity }),
+    });    
+  }       
+
      }
 
 // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)

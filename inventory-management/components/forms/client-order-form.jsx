@@ -158,7 +158,7 @@ const { fields, append, remove } = useFieldArray({
     console.log(values);
     CreateClientOrders(values);
     onClose();
-    window.location.reload();
+   // window.location.reload(); ca me cause des problemes de rafraichissement
   }
 
   return (

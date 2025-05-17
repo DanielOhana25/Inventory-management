@@ -55,7 +55,6 @@ export default function SupplierOrders() {
       reception_date) => {
 
       try {
-
         const order = supplierOrders.find((order) => order.id === supplierOrderID);
 
     // Vérifier si la transition est de "Expedié" (2) à "Recu" (3)

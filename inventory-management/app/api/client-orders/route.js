@@ -53,7 +53,8 @@ export async function PATCH(req) {
   export async function POST(req) {
     try {
       const { client_id, products } = await req.json();
-  
+      console.log("Données reçues :", client_id, products);
+
       if (!client_id || !products || products.length === 0) {
         return NextResponse.json({ message: "Données manquantes" }, { status: 400 });
       }
