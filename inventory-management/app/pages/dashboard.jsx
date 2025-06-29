@@ -1,12 +1,17 @@
-"use client"
+"use client";
 
 import React from "react";
 
 export default function Dashboard() {
-    return (
-        <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-4xl font-bold mb-4">Dashboard</h1>
-        <p className="text-lg">Welcome to the Inventory Management Dashboard!</p>
-        </div>
-    );
-    }
+  return (
+    <div className="w-full h-screen">
+      <iframe
+        title="inventory-management"
+        src="https://app.powerbi.com/reportEmbed?reportId=bc9c7bbe-5044-4ee8-96dd-eb6dee78c318&autoAuth=true&ctid=7b410031-6333-4080-9e61-afdbd57b3bd9"
+        className="w-full h-full"
+        frameBorder="0"
+        allowFullScreen
+      ></iframe>
+    </div>
+  );
+}
